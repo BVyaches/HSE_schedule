@@ -39,4 +39,4 @@ async def download_sheet(name, link):
             await file.write(await response.read())
 
 
-asyncio.run(get_data())
+

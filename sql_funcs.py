@@ -21,39 +21,48 @@ async def create_table():
 async def check_sheets():
     db = await aiosqlite.connect('server.db')
     cursor = await db.cursor()
-    sql_data = await cursor.execute('SELECT * FROM sheets')
+    await cursor.execute('SELECT sheet_name, sheet_url FROM sheets')
+    sql_data = {i[0]: i[1] for i in await cursor.fetchall()}
     new_data = await get_data()
-
     updates = []
     for new_sheet in new_data:
         await cursor.execute(
             f'SELECT * FROM sheets WHERE sheet_name = "{new_sheet}"')
-        if not await cursor.fetchall():
+
+        if not await cursor.fetchone():
             await download_sheet(new_sheet, new_data[new_sheet])
+
             updates.append(new_sheet)
             await cursor.execute(
                 f'INSERT INTO sheets VALUES '
                 f'("{new_sheet}", "{new_data[new_sheet]}")')
+        else:
+            if new_data[new_sheet] != sql_data[new_sheet]:
+                await download_sheet(new_sheet, new_data[new_sheet])
+
+                updates.append(new_sheet)
+                await cursor.execute(
+                    "f'UPDATE sheets SET sheet_url = " )
         await db.commit()
 
-    async for sheet in sql_data:
-        old_sheet_name, old_sheet_link = sheet
-        if old_sheet_name not in new_data:
+    for old_sheet_name in sql_data:
+
+        if old_sheet_name not in new_data.keys():
+            print(old_sheet_name)
             os.remove(f'sheets/{old_sheet_name}.xls')
             await cursor.execute(
                 f'DELETE FROM sheets WHERE sheet_name = "{old_sheet_name}"')
             await db.commit()
-        else:
-            await download_sheet(old_sheet_name, new_data[old_sheet_name])
-            updates.append(old_sheet_name)
-            await cursor.execute(
-                f'UPDATE sheets SET sheet_url = "{new_data[old_sheet_name]}"'
-                f' WHERE sheet_name = "{old_sheet_name}"')
 
     await cursor.close()
     await db.close()
+    print('Result: ', updates)
+
     return updates
 
-asyncio.run(create_table())
 
-asyncio.run(check_sheets())
+if __name__ == '__main__':
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    response = loop.run_until_complete(check_sheets())
+    loop.close()
