@@ -17,7 +17,7 @@ multidict==6.0.2
 Pillow==9.2.0
 pypiwin32==223
 pytz==2022.2.1
-pywin32==301; platform_system == "Windows"
+pywin32==223; platform_system == "Windows"
 soupsieve==2.3.2.post1
 typing_extensions==4.3.0
 yarl==1.8.1
