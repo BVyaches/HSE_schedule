@@ -2,7 +2,7 @@ import asyncio
 
 import aiofiles
 import aiohttp
-import excel2img
+
 from bs4 import BeautifulSoup
 
 
