@@ -1,4 +1,4 @@
-import aiogram.utils.markdown as fmt
+
 from aiogram import types
 
 
