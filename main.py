@@ -42,6 +42,7 @@ async def download_sheet(name, link):
     await file.close()
 
 
+"""
 async def create_picture(name):
     try:
         excel2img.export_img(f"sheets/{name}.xls",
@@ -50,5 +51,5 @@ async def create_picture(name):
         print('Error in making picture')
         excel2img.export_img(f"sheets/{name}.xls",
                              f"sheets_pics/{name}.png")
-
+"""
 

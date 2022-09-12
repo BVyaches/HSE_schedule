@@ -11,7 +11,7 @@ async def send_sheets(message: types.Message):
     await message.answer('Всё расписание с сайта:')
     for sheet in sheets:
         await message.answer(sheet)
-        await message.answer_document(open(f'sheets_pics/{sheet}.png', 'rb'))
+        await message.answer_document(open(f'sheets/{sheet}.xls', 'rb'))
 
 
 def register_handlers_user(dp: Dispatcher):

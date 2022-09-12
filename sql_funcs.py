@@ -3,7 +3,7 @@ import os
 
 import aiosqlite
 
-from main import get_data, download_sheet, create_picture
+from main import get_data, download_sheet
 
 
 async def create_table():
@@ -36,7 +36,7 @@ async def check_sheets():
 
         if not await cursor.fetchone():
             await download_sheet(new_sheet, new_data[new_sheet])
-            await create_picture(new_sheet)
+            #await create_picture(new_sheet)
             updates.append(new_sheet)
             await cursor.execute(
                 'INSERT INTO sheets VALUES '
@@ -45,7 +45,7 @@ async def check_sheets():
         else:
             if new_data[new_sheet] != sql_data[new_sheet]:
                 await download_sheet(new_sheet, new_data[new_sheet])
-                await create_picture(new_sheet)
+                #await create_picture(new_sheet)
                 updates.append(new_sheet)
                 await cursor.execute(
                     f'UPDATE sheets SET sheet_url = "{new_data[new_sheet]}"'
@@ -56,7 +56,7 @@ async def check_sheets():
         if old_sheet_name not in new_data.keys():
             print(old_sheet_name)
             os.remove(f'sheets/{old_sheet_name}.xls')
-            os.remove(f'sheets_pics/{old_sheet_name}.png')
+            #os.remove(f'sheets_pics/{old_sheet_name}.png')
             await cursor.execute(f'DELETE FROM sheets WHERE sheet_name = "{old_sheet_name}"')
             await db.commit()
 

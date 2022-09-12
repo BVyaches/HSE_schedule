@@ -26,7 +26,7 @@ async def auto_check():
         for sheet in new_data:
             for user in active_users:
                 await bot.send_message(user, sheet)
-                await bot.send_document(user, open(f'sheets_pics/{sheet}.png', 'rb'))
+                await bot.send_document(user, open(f'sheets/{sheet}.xls', 'rb'))
         print(time.time() - start_time)
         print('Stopped')
         await asyncio.sleep(600)
