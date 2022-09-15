@@ -3,7 +3,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 
 from formats import main_keyboard
-from sql_funcs import get_all_sheets
+from sql_funcs import get_all_sheets, stop_status
 
 
 async def send_sheets(message: types.Message):
@@ -14,7 +14,14 @@ async def send_sheets(message: types.Message):
         await message.answer_document(open(f'sheets/{sheet}.xls', 'rb'))
 
 
+async def stop_sending(message: types.Message):
+    await stop_status(message.from_user.id)
+    await message.answer('Рассылка остановлена, для восстановления отправьте /start')
+
 def register_handlers_user(dp: Dispatcher):
     dp.register_message_handler(send_sheets, Text(equals='Расписание',
+                                                  ignore_case=True),
+                                state='*')
+    dp.register_message_handler(stop_sending, Text(equals='Остановить',
                                                   ignore_case=True),
                                 state='*')

@@ -54,7 +54,7 @@ async def check_sheets():
 
     for old_sheet_name in sql_data:
         if old_sheet_name not in new_data.keys():
-            print(old_sheet_name)
+
             os.remove(f'sheets/{old_sheet_name}.xls')
             #os.remove(f'sheets_pics/{old_sheet_name}.png')
             await cursor.execute(f'DELETE FROM sheets WHERE sheet_name = "{old_sheet_name}"')
@@ -76,23 +76,28 @@ async def get_all_sheets():
     await cursor.close()
     await db.close()
 
-    print(all_sheets)
+
     return all_sheets
 
 
 async def add_user(user_id):
     db = await aiosqlite.connect('server.db')
     cursor = await db.cursor()
-    await cursor.execute(f'INSERT INTO users VALUES ({user_id}, 1)')
+    await cursor.execute(f'SELECT * FROM users WHERE user_id = {user_id}')
+    if not await cursor.fetchone():
+        await cursor.execute(f'INSERT INTO users VALUES ({user_id}, 1)')
+    else:
+        await cursor.execute(f'UPDATE users SET status = 1 WHERE id = {user_id}')
+
     await db.commit()
     await cursor.close()
     await db.close()
 
 
-async def change_status(user_id, status):
+async def stop_status(user_id):
     db = await aiosqlite.connect('server.db')
     cursor = await db.cursor()
-    await cursor.execute(f'UPDATE users SET status = {status} WHERE id = {user_id}')
+    await cursor.execute(f'UPDATE users SET status = 0 WHERE id = {user_id}')
     await db.commit()
     await cursor.close()
     await db.close()
@@ -107,6 +112,7 @@ async def get_active_users():
     await cursor.close()
     await db.close()
     return active_users
+
 
 
 if __name__ == '__main__':

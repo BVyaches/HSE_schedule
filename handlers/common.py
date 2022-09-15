@@ -20,10 +20,9 @@ async def cancel_operation(message: types.Message, state: FSMContext):
     await message.answer('Вы отменили действие', reply_markup=keyboard)
 
 
-
-
 def register_handlers_common(dp: Dispatcher):
-    dp.register_message_handler(start_bot, commands='start', state='*')
+    dp.register_message_handler(start_bot, commands='start', state='*'),
+    dp.register_message_handler(start_bot, Text(equals='Продолжить рассылку')),
     dp.register_message_handler(cancel_operation, commands='cancel', state='*')
     dp.register_message_handler(cancel_operation, Text(equals='Отмена',
                                                        ignore_case=True),
