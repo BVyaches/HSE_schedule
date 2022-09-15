@@ -83,7 +83,7 @@ async def get_all_sheets():
 async def add_user(user_id):
     db = await aiosqlite.connect('server.db')
     cursor = await db.cursor()
-    await cursor.execute(f'SELECT * FROM users WHERE user_id = {user_id}')
+    await cursor.execute(f'SELECT * FROM users WHERE id = {user_id}')
     if not await cursor.fetchone():
         await cursor.execute(f'INSERT INTO users VALUES ({user_id}, 1)')
     else:
