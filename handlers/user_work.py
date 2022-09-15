@@ -10,8 +10,7 @@ async def send_sheets(message: types.Message):
     sheets = await get_all_sheets()
     await message.answer('Всё расписание с сайта:')
     for sheet in sheets:
-        await message.answer(sheet)
-        await message.answer_document(open(f'sheets/{sheet}.xls', 'rb'))
+        await message.answer_document(open(f'sheets/{sheet}.xls', 'rb'), caption=f'<b>{sheet}</b>', parse_mode='HTML')
 
 
 async def stop_sending(message: types.Message):
