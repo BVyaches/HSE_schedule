@@ -21,7 +21,7 @@ async def create_table():
     await cursor.close()
     await db.close()
 
-
+asyncio.run(create_table())
 async def check_sheets():
     db = await aiosqlite.connect('server.db')
     cursor = await db.cursor()
